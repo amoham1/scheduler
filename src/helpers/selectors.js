@@ -9,30 +9,35 @@ export function getAppointmentsForDay(state, day) {
   let appointmentsArray = []
   for (const obj of state.days) {
     if (obj.name === day) {
-       appointmentsArray = obj.appointments;
+      appointmentsArray = obj.appointments;
     }
   }
 
   for (const val of appointmentsArray) {
-    result.push(state.appointments[String(val)]);
+    result.push(state.appointments[val]);
   }
   return result;
 }
 
-export function getInterview(state, interview){
-  if(interview){
-    let result = {"student": interview.student, "interviewer": state.interview[interview.interviewer]};
+export function getInterview(state, interview) {
+  if (interview) {
+    let result = { "student": interview.student, "interviewer": state.interview[interview.interviewer] };
     return result
-  }else {
+  } else {
     return null;
   }
 }
-// interview: { student: "Archie Cohen", interviewer: 2 }
-// {  
-//   "student": "Archie Cohen",
-//   "interviewer": {  
-//     "id": 2,
-//     "name": "Tori Malcolm",
-//     "avatar": "https://i.imgur.com/LpaY82x.png"
-//   }
-// }
+
+export function getInterviewsForDay(state, day) {
+  let result = [];
+  let interviewersArray = []
+  for (const obj of state.days) {
+    if (obj.name === day) {
+      interviewersArray = obj.interviewers;
+    }
+  }
+  for (const val of interviewersArray) {
+    result.push(state.interview[val]);
+  }
+  return result;
+}
