@@ -8,8 +8,8 @@ import Empty from "components/Appointment/Empty";
 import useVisualMode from "hooks/useVisualMode";
 import Form from "./Form";
 import Status from "./Status";
-import Confirm from "./Confirm";
-
+import Confirm from "./Confirm"; 
+import Error from "./Error";
 
 export default function Appointment(props) {
   const EMPTY = "EMPTY";
@@ -17,6 +17,9 @@ export default function Appointment(props) {
   const SAVING = "SAVING";
   const DELETE = "DELETE";
   const CONFIRM = "CONFIRM";
+  const EDIT = "EDIT";  
+  const ERROR_SAVE = "ERROR_SAVE";  
+  const ERROR_DELETE = "ERROR_DELETE"
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
@@ -29,6 +32,8 @@ export default function Appointment(props) {
     props.bookInterview(props.id, interview)
       .then(() => {
         transition("SHOW");
+      }).catch(()=>{
+        transition("ERROR_SAVE",true)
       })
   }
   function deleting() {
@@ -36,6 +41,8 @@ export default function Appointment(props) {
     props.cancelInterview(props.id)
       .then(() => {
         transition("EMPTY");
+      }).catch(()=>{
+        transition("ERROR_DELETE",true)
       })
   }
   return (
@@ -54,8 +61,20 @@ export default function Appointment(props) {
           student={props.interview.student}
           interviewer={props.interview.interviewer}
           onDelete={() => transition(CONFIRM)}
+          onEdit={() => transition(EDIT)}
         />
       )}
+      {mode === EDIT && (
+        <Form
+          interviewers={props.interviewers}
+          onCancel={() => back(EMPTY)}
+          onSave={save}
+          student={props.interview.student}
+          interviewer={props.interview.interviewer.id}
+        />
+      )}
+      {mode === ERROR_SAVE && <Error onClose={back} message={"Error Saving Please Try Again"}/>}
+      {mode === ERROR_DELETE && <Error onClose={back} message={"Error Deleting Please Try Again"}/>}
       {mode === CONFIRM && <Confirm onConfirm={deleting} onCancel={back} />}
       {mode === SAVING && <Status message={"Saving"} />}
       {mode === DELETE && <Status message={"Deleting"} />}
