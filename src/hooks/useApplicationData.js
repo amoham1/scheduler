@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+
 export default function useApplicationData(props) {
   const [state, setState] = useState({
     day: "Monday",
@@ -30,6 +31,33 @@ export default function useApplicationData(props) {
     })
   }, []);
 
+  const updateSpots = function (state, appointments, id) {
+    // console.log(state);
+    // console.log(appointments);
+    let i;
+    const day = state.days.find((day, index) => {
+      if (state.day === day.name) {
+        i = index;
+        return day
+      }
+    });
+    console.log("THIS IS THE DAY OBJECT:", day)
+    console.log("INDEX : ", i)
+    let count = 0;
+    for (let val of day.appointments) {
+      if (appointments[val].interview === null) {
+        count++;
+      }
+      console.log("this is the number of spots:", count);
+    }
+    const days = [...state.days];
+    console.log("THIS IS THE DAYS ARRAY :", days)
+    days[i] = { ...day, spots: count }
+    console.log("THIS IS THE DAYS ARRAY AFTER UPDATE:", days)
+    // return days array
+    return days;
+  };
+
   function bookInterview(id, interview) {
     console.log(id, interview);
     const appointment = {
@@ -46,8 +74,10 @@ export default function useApplicationData(props) {
     });
     return axios.put(`http://localhost:8001/api/appointments/${id}`, { interview })
       .then(data => {
+        const spotUpdate = updateSpots(state,appointments)
         setState({
           ...state,
+          days: spotUpdate,
           appointments
         })
       });
@@ -64,8 +94,10 @@ export default function useApplicationData(props) {
           ...state.appointments,
           [id]: appointment
         };
+        const spotUpdate = updateSpots(state,appointments)
         setState({
           ...state,
+          days: spotUpdate,
           appointments
         });
       });
