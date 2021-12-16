@@ -32,8 +32,6 @@ export default function useApplicationData(props) {
   }, []);
 
   const updateSpots = function (state, appointments, id) {
-    // console.log(state);
-    // console.log(appointments);
     let i;
     const day = state.days.find((day, index) => {
       if (state.day === day.name) {
@@ -41,20 +39,14 @@ export default function useApplicationData(props) {
         return day
       }
     });
-    console.log("THIS IS THE DAY OBJECT:", day)
-    console.log("INDEX : ", i)
     let count = 0;
     for (let val of day.appointments) {
       if (appointments[val].interview === null) {
         count++;
       }
-      console.log("this is the number of spots:", count);
     }
     const days = [...state.days];
-    console.log("THIS IS THE DAYS ARRAY :", days)
     days[i] = { ...day, spots: count }
-    console.log("THIS IS THE DAYS ARRAY AFTER UPDATE:", days)
-    // return days array
     return days;
   };
 
