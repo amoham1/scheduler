@@ -27,12 +27,7 @@ export default function Form(props) {
       setError("Student name cannot be blank");
       return;
     }
-    // if (interviewer === null){
-    //   setInterError("Interviewer needs to be selected");
-    //   return;
-    // }
     setError("");
-    // setInterError(null);
     props.onSave(student, interviewer);
   }
 
@@ -57,12 +52,11 @@ export default function Form(props) {
         value={interviewer}
         interviewers={props.interviewers}
       />
-      {/* <section className="appointment__validation">{interError}</section> */}
     </section>
     <section className="appointment__card-right">
       <section className="appointment__actions">
         <Button danger onClick={cancel} >Cancel</Button>
-        <Button confirm onClick={()=>validate()}>Save</Button>
+        <Button confirm onClick={() => validate()}>Save</Button>
       </section>
     </section>
   </main>);
